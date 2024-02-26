@@ -1,0 +1,8 @@
+CREATE TABLE query(
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER UNIQUE,
+    user_name VARCHAR(20),
+    user_query VARCHAR(1000),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
