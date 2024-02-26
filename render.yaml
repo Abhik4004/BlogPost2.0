@@ -1,0 +1,16 @@
+services:
+  - name: blog-post
+    type: web
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    env:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+
+databases:
+  - name: Forum
+    type: postgres
+    version: "12"
+    diskSizeMB: 256
