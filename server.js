@@ -27,7 +27,11 @@ async function getQuery() {
     return result;
 }
 
-app.get("/", async (req, res) => {
+app.get("/", (req, res) => {
+    res.redirect("/index.ejs");
+});
+
+app.get("/blogs.ejs", async (req, res) => {
     let query = await getQuery();
     let userName = [];
     let userQuery = [];
@@ -47,13 +51,17 @@ app.get("/", async (req, res) => {
     console.log(userUpdateTime);
     console.log(userId);
 
-    res.render("index.ejs",{
+    res.render("blogs.ejs",{
         rows: query.rowCount,
         user: userName,
         time: userUpdateTime,
         query: userQuery,
         id: userId
     });
+});
+
+app.get("/index.ejs", (req, res) => {
+    res.render("index.ejs");
 });
 
 app.post("/add", async (req, res) => {
@@ -77,8 +85,8 @@ app.post("/add", async (req, res) => {
         };
     } else {
         console.log('Can not process');
-        res.redirect("/");
     }
+    res.redirect("/blogs.ejs");
     // console.log(id, name, query);
 });
 
@@ -87,7 +95,7 @@ app.post("/delete", async (req, res) => {
     console.log(req.body);
     try {
         await db.query(`DELETE FROM query WHERE user_id = ${postId}`);
-        res.redirect("/");
+        res.redirect("/blogs.ejs");
     } catch(err) {
         console.log(err);
         res.render("index.ejs", {

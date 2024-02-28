@@ -1,0 +1,21 @@
+<%- include("./partials/header.ejs") %>
+<div id="posts">
+    <% if(locals.rows) { %>
+        <% for(let i = 0; i < rows; i++) { %>
+            <article class="center mw5 mw6-ns br3 hidden ba b--black-10 mv4">
+                <h1 class="f6 bg-near-white br3 br--top black-60 mv0 pv2 ph3">
+                    <%= user[i] %> <%= time[i] %>
+                </h1>
+                <div class="pa3 bt b--black-10">
+                    <p class="f6 f5-ns lh-copy measure">
+                        <%= query[i] %>
+                    </p>
+                </div>
+            </article>
+            <form action="/delete" method="post">
+                <input type="hidden" name="postId" value="<%= id[i] %>">
+                <button type="submit" class="btn btn-danger" style="margin-left: 35rem;">Delete</button>
+            </form>
+        <% } %>
+    <% } %>
+</div>
