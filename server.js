@@ -2,13 +2,17 @@ import express from "express";
 import pg from "pg";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
+import BadWordsFilter from "bad-words";
 
 const port = 3000;
 const app = express();
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
-dotenv.config();
+const filter = new BadWordsFilter();
+let input_text = filter.clean("Go to Hell");
+// let check = input_text.includes('*');
 
+dotenv.config();
 const db = new pg.Client({
     user: 'postgres',
     host: 'localhost',
@@ -58,19 +62,24 @@ app.post("/add", async (req, res) => {
     let id = Number(req.body.user_id);
     let name = req.body.user_name;
     let query = req.body.user_query;
-
-    console.log(id, name, query);
-
-    try {
-        await db.query(`INSERT INTO query (user_id, user_name, user_query) VALUES(${id}, '${name}', '${query}')`);
+    let inQuery = filter.clean(query);
+    let check = inQuery.includes('*');
+    if(!check)
+    {
+        try {
+            await db.query(`INSERT INTO query (user_id, user_name, user_query) VALUES(${id}, '${name}', '${query}')`);
+            res.redirect("/");
+        } catch(err) {
+            console.log(err);
+            res.render("index.ejs", {
+                error: "Id already exist"
+            });
+        };
+    } else {
+        console.log('Can not process');
         res.redirect("/");
-    } catch(err) {
-        console.log(err);
-        res.render("index.ejs", {
-            error: "Id already exist"
-        });
-    };
-    
+    }
+    // console.log(id, name, query);
 });
 
 app.post("/delete", async (req, res) => {
