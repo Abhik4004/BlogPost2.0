@@ -76,7 +76,6 @@ app.post("/add", async (req, res) => {
     {
         try {
             await db.query(`INSERT INTO query (user_id, user_name, user_query) VALUES(${id}, '${name}', '${query}')`);
-            res.redirect("/");
         } catch(err) {
             console.log(err);
             res.render("index.ejs", {
@@ -86,7 +85,7 @@ app.post("/add", async (req, res) => {
     } else {
         console.log('Can not process');
     }
-    res.redirect("/blogs.ejs");
+    res.redirect("/blogs.ejs")
     // console.log(id, name, query);
 });
 
